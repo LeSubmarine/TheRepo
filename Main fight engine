@@ -33,7 +33,7 @@ class App:
             self.on_render()
         self.on_cleanup()
 
-class Character:
+class Character(object):
 	self.turn = 0
 	def __init__(self,name,strength,agility):
 		self.name = name
