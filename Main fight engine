@@ -34,7 +34,7 @@ class App:
         self.on_cleanup()
 
 class Character(object):
-	self.turn = 0
+	turn = 0
 	def __init__(self,name,strength,agility):
 		self.name = name
 		self.strength = strength
