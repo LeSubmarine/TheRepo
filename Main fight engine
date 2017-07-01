@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
- 
+import random
+import math
 class App:
     def __init__(self):
         self._running = True
@@ -35,12 +36,19 @@ class App:
 
 class Character(object):
 	turn = 0
-	def __init__(self,name,strength,agility):
+	crit = 1
+	def __init__(self,name,strength,agility,damage_range):
 		self.name = name
 		self.strength = strength
 		self.agility = agility
+		self.damage_range = damage_range
+	def damage(self):
+		if math.log10(random.randint(1,100)) + (self.agility * 0.004) > 2:
+			self.crit = 4
+		#evt. dodge/hit mechanic
+		damage_dealt = self.strength/ * self.crit * 
 	
-player = Character("Warrior",40,40)
+player = Character("Warrior",40,40,[600,700])
  
 if __name__ == "__main__" :
     theApp = App()
