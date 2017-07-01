@@ -32,6 +32,15 @@ class App:
             self.on_loop()
             self.on_render()
         self.on_cleanup()
+
+class Character:
+	self.turn = 0
+	def __init__(self,name,strength,agility):
+		self.name = name
+		self.strength = strength
+		self.agility = agility
+	
+player = Character("Warrior",40,40)
  
 if __name__ == "__main__" :
     theApp = App()
