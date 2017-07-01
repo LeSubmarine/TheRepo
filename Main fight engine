@@ -36,18 +36,25 @@ class App:
 
 class Character(object):
 	turn = 0
-	crit = 1
+	crit = False
 	def __init__(self,name,strength,agility,damage_range):
 		self.name = name
 		self.strength = strength
 		self.agility = agility
 		self.damage_range = damage_range
-	def damage(self):
+	def attack(self):
 		if math.log10(random.randint(1,100)) + (self.agility * 0.004) > 2:
-			self.crit = 4
+			self.crit = True
 		#evt. dodge/hit mechanic
-		damage_dealt = self.strength/ * self.crit * 
-	
+		damage_dealt = self.strength/45 * self.damage[0]
+		damage_dealt = damage_dealt + (self.damage[1] * (1 / math.log10(random.randint(1,20))))
+		if self.crit:
+			damage_dealt = damage_dealt * 4
+			self.crit = False
+			return [damage_dealt,True]
+		else:
+			return [damage_dealt,False]
+
 player = Character("Warrior",40,40,[600,700])
  
 if __name__ == "__main__" :
