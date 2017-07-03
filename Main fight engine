@@ -1,44 +1,164 @@
+###Imports###
 import pygame
 from pygame.locals import *
- 
+import random
+import math
+
+
+###Variables###
+screen = pygame.display.set_mode((1024,768))
+
+###Classes###
+#App Class#
+'''
 class App:
+
+	#Initiate
     def __init__(self):
         self._running = True
         self._display_surf = None
-        self.size = self.weight, self.height = 640, 400
- 
+        self.size = self.width, self.height = 640, 400
+
+	#On initiation
     def on_init(self):
         pygame.init()
-        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self._display_surf = pygame.display.set_mode(self.size)#, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
- 
+
+	#On Events
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
-    def on_loop(self):
-        pass
+
+	#Rendering
     def on_render(self):
-        pass
+
+        player_figure = load_character(player.armour_type,player.creature_type)
+        for i in player_figure:
+        theApp._display_surf.blit(i, (50,100))
+
+        player_figure = pygame.image.load("plain_human.png")
+        heApp._display_surf.blit(player_figure,(50,100))
+        pygame.display.flip()
+
+
+    #Quits pygame
     def on_cleanup(self):
         pygame.quit()
- 
+
+	#On execution
     def on_execute(self):
         if self.on_init() == False:
             self._running = False
- 
+
+	#Small assigments as turn counter, damage and win/lose
+    def on_loop(self):
+        turn()
+
+
+		### GAME LOOP ###
         while( self._running ):
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_loop()
             self.on_render()
+
+
         self.on_cleanup()
- 
+'''
+
+
+#Character Class#
+class Character(object):
+    turn = 0
+    crit = False
+	#Maybe make sub class for different stuff like races?
+    def __init__(self,name,strength,agility,damage_range,health,creature_type,armour_type = False):
+        self.name = name
+        self.strength = strength
+        self.agility = agility
+        self.damage_range = damage_range
+        self.health = health
+        self.creature_type = creature_type
+        self.armour_type = armour_type
+    def attack(self):
+        if(math.log10(random.randint(1,100)) + (self.agility * 0.004) > 2):
+            self.crit = True
+        damage_dealt = self.strength/45 * self.damage_range[0]
+        damage_dealt = damage_dealt + ((self.damage_range[1] - self.damage_range[0]) * (1 / (math.log10(random.randint(1,20) + 1)))) * 0.95
+        damage_dealt = int(damage_dealt)
+        if self.crit:
+            damage_dealt = damage_dealt * 4
+            self.crit = False
+            return [damage_dealt,True]
+        else:
+            return [damage_dealt,False]
+
+
+###Functions###
+#Events
+def load_character(armour_type,creature_type):
+	character_list = [pygame.image.load("chars/plain_%s.png" % creature_type)]
+	if armour_type:
+		for i in armour_type:
+			character_list.append(pygame.image.load("armour/%s.png" % i))
+	return character_list
+
+def events():
+    pass
+#The turn and how it folds out
+def turn():
+    player.turn = player.turn + 1
+    if player.turn % 2:
+        #Player turn
+        damage_dealt = player.attack()
+        #if damage_dealt[1]:
+            #print("%s makes a critical strike!" % player.name)
+        #print("%s deals %s damage to %s" % (player.name,damage_dealt[0],enemy.name))
+        enemy.health = enemy.health - damage_dealt[0]
+        #print("%s now only has %s health left" % (enemy.name,enemy.health))
+        input()
+    else:
+        #Enemy turn
+        damage_dealt = enemy.attack()
+        #if damage_dealt[1]:
+            #print("%s makes a critical strike!" % enemy.name)
+        #print("%s deals %s damage to %s" % (enemy.name,damage_dealt[0],player.name))
+        player.health = player.health - damage_dealt[0]
+        #print("%s now only has %s health left" % (player.name,player.health))
+        input()
+#Rendering of the screen
+def render():
+	background = pygame.image.load("background/plain_background.png")
+	screen.blit(background,(0,0))
+	pygame.display.flip()
+	player_figure = load_character(player.armour_type,player.creature_type)
+	for i in player_figure:
+		screen.blit(i,(50,100))
+		pygame.display.flip()
+	'''
+	player_figure = pygame.image.load("Chars/plain_human.png")
+	screen.blit(player_figure,(50,100))
+	pygame.display.flip()
+	'''
+
+
+
+###Preparations?### testing
+player = Character("Warrior",40,40,[600,700],25000,"human",["iron_armour","iron_helmet"])
+enemy = Character("Bear",40,40,[400,1000],25000,"bear")
+
+'''
+#Pygame screen opening
 if __name__ == "__main__" :
     theApp = App()
     theApp.on_execute()
+'''
 
-
+###Game loop###
+#Without pygame
 while True:
+	#input() no werk with pygame rip izi pause
 	events()
-	loop()
+	#turn()
 	render()
